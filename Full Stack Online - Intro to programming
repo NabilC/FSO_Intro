@@ -1,0 +1,138 @@
+puts is a method to output, print is another that doesn’t create newline
+Array Manipulation:
+<< adds element to end of array, evaluates to array
+
+array.push adds element(s) to end of array, evaluates to array
+array.pop removes last element of array, evaluate to element that was removed
+
+array.unshift adds element to front of array, evaluates to array
+array.shift removes first element of array, evaluates to element that was removed
+
+array/string.index(ele) - evaluates to index where element is found or nil if not found
+array/string.include?(ele) - evaluates to a boolean T/F if ele is found
+
+array/string.reverse - evaluates to a new reverse version of the array/string
+array/string.reverse! - reverse string/array in place
+
+array/string slicing:
+array[startIdx..endIdx] - grabs elements from start to end (inclusive)
+array[[startIdx…endIdx] - grabs elements up to end (excludes last element at end index)
+
+string.split evaluates to an array
+ex:
+str = “follow the yellow brick road”
+words = str.split(“ “)
+puts words # [“follow”, “the”, “yellow”, “brick”, “road”]
+
+array.join evaluates to a string
+ex: words.join(“ “)
+Array enumerables:
+.each iterates over elements of an array
+.each_with_index iterates over elements of an array with index
+
+String enumerables:
+.each_char iterates over characters of a string
+.each_char.with_index iterates over characters of a string with index
+
+repeat a block using times:
+3.times do
+    puts “hi"
+end
+
+specify a range of numbers using (start…end) or (start..end)
+including end:
+(2..6).each {|n| puts n} # print 2, 3, 4, 5, 6 with new lines
+excluding end:
+(2…6).each {|n| puts n} # prints 2 through 5 with new lines
+
+string.upcase - string is uppercased
+ex: "abc".upcase # => "ABC"
+string.downcase - string is lowercased
+Pig Latin problem:
+Write a method pig_latin_word that takes in a word string and translates the word into pig latin.
+
+# Pig latin translation uses the following rules:
+# - for words that start with a vowel, add 'yay' to the end
+# - for words that start with a nonvowel, move all letters before the first vowel to the end of the word and add 'ay'
+
+def pig_latin_word(word)
+  vowels = 'aeiou'
+  
+  if vowels.include?(word[0])
+    return word + 'yay'
+  end
+  
+  word.each_char.with_index do |char, i|
+    if vowels.include?(char)
+      return word[i..-1] + word[0...i] + 'ay'
+    end
+  end
+    
+end
+
+puts pig_latin_word("apple")   # => "appleyay"
+puts pig_latin_word("eat")     # => "eatyay"
+puts pig_latin_word("banana")  # => "ananabay"
+puts pig_latin_word("trash")   # => "ashtray"
+Combinations problem:
+Write a method combinations that takes in an array of unique elements, the method should return a 2D array representing all possible combinations of 2 elements of the array.
+
+def combinations(arr)
+  pairs = []
+  
+  arr.each_with_index do |ele1, idx1|
+    arr.each_with_index do |ele2, idx2|
+      if idx2 > idx1
+        pairs << [ele1, ele2]
+      end
+    end
+  end
+  
+  return pairs
+end
+
+print combinations(["a", "b", "c"]); # => [ [ "a", "b" ], [ "a", "c" ], [ "b", "c" ] ]
+puts
+
+print combinations([0, 1, 2, 3]); # => [ [ 0, 1 ], [ 0, 2 ], [ 0, 3 ], [ 1, 2 ], [ 1, 3 ], [ 2, 3 ] ]
+puts
+Opposite Count problem
+
+Write a method opposite_count that takes in an array of unique numbers. The method should return the number of pairs of elements that sum to 0.
+def opposite_count(nums)
+  count = 0
+  
+  nums.each_with_index do |num1, idx1|
+    nums.each_with_index do |num2, idx2|
+      if num1 + num2 == 0 && idx2 > idx1
+        count += 1
+      end
+    end
+  end
+  
+  return count
+end
+
+puts opposite_count([ 2, 5, 11, -5, -2, 7 ]) # => 2
+puts opposite_count([ 21, -23, 24 -12, 23 ]) # => 1
+Hashes - data structure with ‘key => value’ pairs; useful for representing different facets of a single thing (vs. collection multiple things-> use an array)
+Hash methods:
+.length
+.has_key?(k)
+.has_value?(v)
+.keys - returns array of all hash keys
+.values - returns array of all hash values
+Hash enumerables:
+.each-> do |k, v|
+.each_key -> do |k|
+.each_value -> do |v|
+Hash default value is nil (a common default value in Ruby which represents empty or nothingness)
+Whenever you try to access key of a hash that doesn’t exist yet, you’ll get nil
+You can set your own custom default value when creating a new hash:
+my_hash = Hash.new(0)
+puts my_hash(“c”) # prints 0 or whatever you set as the default value
+Counter hash strategy:
+counter = Hash.new(0)
+str = “bootcamp prep”
+str.each_char { |char| counter[char] += 1 }
+puts counter
