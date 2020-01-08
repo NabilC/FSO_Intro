@@ -1,4 +1,6 @@
 puts is a method to output, print is another that doesn’t create newline
+break - immediately exit the loop
+next - skips to next iteration
 Array Manipulation:
 << adds element to end of array, evaluates to array
 
@@ -136,3 +138,142 @@ counter = Hash.new(0)
 str = “bootcamp prep”
 str.each_char { |char| counter[char] += 1 }
 puts counter
+Array giving enumerables
+map - concise method to iterate over array doing a certain desired action on each element and return a new array
+ex: new_arr = arr.map { |ele| ele.upcase }
+
+select - filtering method that will select certain elements based on given criteria (like only return even numbers)
+ex: evens = nuns.select { |ele| ele % 2 == 0 }
+
+Note you can write multiplle methods in a one-liner to make code more readable and concise. For example, this line first splits the sentence (split splits on spaces by default) and then selects words containing “o”: 
+
+def o_words(sentence)
+  return sentence.split.select { |word| word.include?("o") }
+end
+
+print o_words("How did you do that?") #=> ["How", "you", "do"]
+puts
+Most Vowels problem
+
+Write a method most_vowels that takes in a sentence string and returns the word of the sentence that contains the most vowels. 
+The key insight here is to create a counts hash that contains the key, value pair of (each word in the sentence=>vowel count of the word) and the use of “sort_by” method to sort the counts hash from lowest to highest count. 
+Sort_by method takes in a block that passes in the key and value { |k,v| }. 
+This stores the words in a 2D array for each word and vowel count like so: 
+[[word, vowel_count], word2, vowel_count], etc.] and you can retrieve the word with most vowels using sorted[-1][0].
+def most_vowels(sentence)
+  counts = {}
+  
+  words = sentence.split
+  words.each { |word| counts[word] = vowel_count(word) }
+  
+  sorted = counts.sort_by { |k,v| v}  # sorted variable stores new 
+  return sorted[-1][0]
+end
+  
+  
+def vowel_count(word)
+  vowels = "aeiou"
+  count = 0
+  
+  word.each_char do |char| 
+    if vowels.include?(char)
+      count += 1
+    end
+  end
+  
+  return count
+end
+
+print most_vowels("what a wonderful life") #=> “wonderful"
+Prime
+
+Write a method prime? that takes in a number and returns a boolean, indicating whether the number is prime. A prime number is only divisible by 1 and itself.
+def prime?(num)
+  return false if num < 2
+  
+  (2...num).each do |factor|
+    if num % factor == 0
+      return false
+    end
+  end
+  
+  return true
+end
+
+puts prime?(2)  #=> true
+puts prime?(5)  #=> true
+puts prime?(11) #=> true
+puts prime?(4)  #=> false
+puts prime?(9)  #=> false
+puts prime?(-5) #=> false
+Pyramid Sum problem
+
+Write a method pyramid_sum that takes in an array of numbers representing the base of a pyramid. The function should return a 2D array representing a complete pyramid with the given base. To construct a level of the pyramid, we take the sum of adjacent elements of the level below.
+# For example, the base [1, 4, 6] gives us the following pyramid
+#     15
+#   5   10
+# 1   4    6
+
+def pyramid_sum(base)
+  pyramid = [base]
+
+  while pyramid.length < base.length
+    prev_level = pyramid[0]
+      next_level = adjacent_sum(prev_level)
+    pyramid.unshift(next_level)
+  end
+  
+  return pyramid
+end
+
+def adjacent_sum(arr)
+  new_arr = []
+  
+  arr.each_with_index do |ele, i|
+    if i != arr.length - 1
+      new_arr << arr[i] + arr[i + 1]
+    end
+  end
+  
+  return new_arr
+end
+
+print pyramid_sum([1, 4, 6]) #=> [[15], [5, 10], [1, 4, 6]]
+puts
+
+print pyramid_sum([3, 7, 2, 11]) #=> [[41], [19, 22], [10, 9, 13], [3, 7, 2, 11]]
+puts
+Same Char Collapse problem
+
+Write a method same_char_collapse that takes in a string and returns a collapsed version of the string. To collapse the string, we repeatedly delete 2 adjacent characters that are the same until there are no such adjacent characters. If there are multiple pairs that can be collapsed, delete the leftmost pair. For example, we take the following steps to collapse "zzzxaaxy": zzzxaaxy -> zxaaxy -> zxxy -> zy
+Note use of boolean placeholder “collapsible” to keep the iteration through the characters going until it meets the condition of the problem statement "until there are no such adjacent characters”. This means put the whole code in a while loop with a true before and set collapsible to false at the beginning of the loop assuming that maybe from now I don’t need to do another iteration. Then, all I’m doing in the code is determining whether two adjacent characters are the same, and deleting them. If I delete them, note that I set collapsible to true again before the break, because deleting the two characters can cause another pair of adjacent characters and that means I need to check the string again.
+ex: deleting the first two z’s from “zzzxaaxy” results in “zxaaxy” which has two a’s so you need to go through the check again
+def same_char_collapse(str)
+  collapsible = true
+  
+  while reducible
+    chars = str.split("")
+    collapsible = false
+  
+    chars.each_with_index do |char, i|
+      if chars[i] == chars[i + 1]
+        chars[i] = “” # since chars is an array, setting each value to empty string is same as deleting the character at i and i + 1 position (2 leftmost pair)
+        chars[i + 1] = ""
+        collapsible = true
+        break
+      end
+    end
+  
+    str = chars.join("")
+  end
+  
+  return str
+  
+end
+
+puts same_char_collapse("zzzxaaxy")   #=> "zy"
+# because zzzxaaxy -> zxaaxy -> zxxy -> zy
+
+
+puts same_char_collapse("uqrssrqvtt") #=> "uv"
+# because uqrssrqvtt -> uqrrqvtt -> uqqvtt -> uvtt -> uv
